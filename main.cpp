@@ -10,5 +10,6 @@ int main()
     Cube cube;
     cube.getData();
     cube.scaleUp(3,2,1);
+    cube.scaleDown(1,2,1);
     cube.translate(2,3,3);
 }
