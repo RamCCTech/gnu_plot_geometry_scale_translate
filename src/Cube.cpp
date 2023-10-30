@@ -52,20 +52,6 @@ void Cube::scale(double scaleX, double scaleY, double scaleZ){
     generateShape();
 }
 
-void Cube::translate(double transX, double transY, double transZ) {
-    std::vector<std::vector<double>> transMatrix = createTranslationMatrix(transX, transY, transZ);
-
-    for (int i = 0; i < points.size(); i++) {
-        std::vector<double> pointHomogeneous = {points[i].x(), points[i].y(), points[i].z(), 1.0};
-        std::vector<double> transPointHomogeneous = multiplyMatrixVector(transMatrix, pointHomogeneous);
-
-        points[i] = Point(transPointHomogeneous[0], transPointHomogeneous[1], transPointHomogeneous[2]);
-    }
-
-    generateShape();
-}
-
-
 void Cube::scaleUp(double scaleX, double scaleY, double scaleZ) {
     scale(scaleX,scaleY,scaleZ);
 }
@@ -79,6 +65,70 @@ void Cube::scaleDown(double scaleX, double scaleY, double scaleZ) {
     scale(invScaleX, invScaleY, invScaleZ);
 }
 
+void Cube::translate(double transX, double transY, double transZ) {
+    std::vector<std::vector<double>> transMatrix = createTranslationMatrix(transX, transY, transZ);
+
+    for (int i = 0; i < points.size(); i++) {
+        std::vector<double> pointHomogeneous = {points[i].x(), points[i].y(), points[i].z(), 1.0};
+        std::vector<double> transPointHomogeneous = multiplyMatrixVector(transMatrix, pointHomogeneous);
+
+        points[i] = Point(transPointHomogeneous[0], transPointHomogeneous[1], transPointHomogeneous[2]);
+    }
+
+    generateShape();
+}
+
+void Cube::rotate(char axis, double angle){
+    double const pi = 3.14159265359;
+    angle = (angle * (pi / 180));
+ 
+    switch(axis){
+        case 'x': {
+            for (size_t i = 0; i < points.size(); i++){
+                double xp = points[i].x();
+                double yp = points[i].y();
+                double zp = points[i].z();
+
+                double xd = xp;
+                double yd = (yp*cos(angle)) - (zp*sin(angle));
+                double zd = (yp*sin(angle)) + (zp*cos(angle));
+
+                points[i]=Point(xd,yd,zd);
+            }
+            break;
+        }
+        case 'y': {
+            for (size_t i = 0; i < points.size(); i++)
+            {
+                double xp = points[i].x();
+                double yp = points[i].y();
+                double zp = points[i].z();
+
+                double xd = (zp*sin(angle)) + (xp*cos(angle));
+                double yd = yp;
+                double zd = (zp*cos(angle)) - (xp*sin(angle));
+                
+                points[i]=Point(xd,yd,zd);
+            }
+            break;
+        }
+        case 'z': {
+            for (size_t i = 0; i < points.size(); i++){
+                double xp = points[i].x();
+                double yp = points[i].y();
+                double zp = points[i].z();
+
+                double xd = (xp*cos(angle)) - (yp*sin(angle));
+                double yd = (xp*sin(angle)) + (yp*sin(angle));
+                double zd = zp;
+                
+                points[i]=Point(xd,yd,zd);
+            }
+            break;
+        }
+    }
+    generateShape();
+}
 
 
 void Cube::generateShape(){

@@ -15,6 +15,7 @@ public:
     void scaleUp(double scaleX, double scaleY, double scaleZ);
     void scaleDown(double scaleX, double scaleY, double scaleZ);
     void translate(double transX, double transY, double transZ);
+    void rotate(char axis, double angle);
 protected:
     void generateShape();
 
